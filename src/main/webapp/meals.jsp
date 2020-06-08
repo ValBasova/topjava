@@ -29,13 +29,15 @@
             </c:otherwise>
         </c:choose>
         <tr style="color: ${color}">
-            <td><%=TimeUtil.format(meal.getDateTime())%></td>
+            <td><%=TimeUtil.format(meal.getDateTime())%>
+            </td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
-            <td></td>
-            <td></td>
+            <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
+            <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
+<p>Добавить еду <a href="meals?action=add">Add</a></p>
 </body>
 </html>
