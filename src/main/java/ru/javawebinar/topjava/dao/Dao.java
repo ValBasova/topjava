@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface Dao {
 
-    void create(Meal meal);
+    Object create(Meal meal);
 
     Meal read(Integer id);
 
-    void update(Meal meal);
+    Object update(Meal meal);
 
     void delete(Integer id);
 

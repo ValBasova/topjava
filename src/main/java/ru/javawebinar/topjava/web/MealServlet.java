@@ -2,12 +2,13 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.dao.Dao;
-import ru.javawebinar.topjava.dao.InMemoryDao;
+import ru.javawebinar.topjava.dao.InMemoryDaoMeals;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.TimeUtil;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,21 +21,28 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
 
-    private Dao dao = new InMemoryDao();
+    private Dao dao;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        dao = new InMemoryDaoMeals();
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        String id = request.getParameter("id");
-        Meal meal;
-        if (id == null || id.length() == 0) {
-            meal = new Meal();
-        } else {
-            meal = dao.read(Integer.parseInt(id));
+        Integer id;
+        try {
+            id = Integer.parseInt(request.getParameter("id"));
+        } catch (NumberFormatException | NullPointerException e) {
+            id = null;
         }
-        meal.setDateTime(TimeUtil.parse(request.getParameter("dateTime")));
-        meal.setDescription(request.getParameter("description"));
-        meal.setCalories(Integer.parseInt(request.getParameter("calories")));
-        if ((id == null || id.length() == 0)) {
+        Meal meal = new Meal(id,
+                TimeUtil.parse(request.getParameter("dateTime")),
+                request.getParameter("description"),
+                Integer.parseInt(request.getParameter("calories")));
+
+        if (id == null) {
             dao.create(meal);
         } else {
             dao.update(meal);
@@ -53,21 +61,24 @@ public class MealServlet extends HttpServlet {
         Meal meal;
         if (action == null) {
             request.setAttribute("mealsList", mealToList);
-            request.getRequestDispatcher("/meals.jsp").forward(request, response);
+            request.getRequestDispatcher(mealsJsp).forward(request, response);
             return;
         }
-        if (action.equalsIgnoreCase("Delete")) {
-            dao.delete(Integer.parseInt(request.getParameter("id")));
-            response.sendRedirect("meals");
-            return;
-        } else if (action.equalsIgnoreCase("Update")) {
-            forward = addOrEditJsp;
-            meal = dao.read(Integer.parseInt(request.getParameter("id")));
-            request.setAttribute("meal", meal);
-        } else if (action.equalsIgnoreCase("Add")) {
-            forward = addOrEditJsp;
-            meal = new Meal();
-            request.setAttribute("meal", meal);
+        switch (action.toLowerCase()) {
+            case "delete":
+                dao.delete(Integer.parseInt(request.getParameter("id")));
+                response.sendRedirect("meals");
+                return;
+            case "update":
+                forward = addOrEditJsp;
+                meal = dao.read(Integer.parseInt(request.getParameter("id")));
+                request.setAttribute("meal", meal);
+                break;
+            case "add":
+                forward = addOrEditJsp;
+                meal = new Meal();
+                request.setAttribute("meal", meal);
+                break;
         }
         request.getRequestDispatcher(forward).forward(request, response);
     }
