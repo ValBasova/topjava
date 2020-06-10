@@ -9,14 +9,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InMemoryDaoMeals implements Dao {
+public class InMemoryDaoMeals implements DaoMeal {
     private AtomicInteger counter = new AtomicInteger(0);
     private Map<Integer, Meal> mealsMap = new ConcurrentHashMap<>();
 
     {
         for (Meal meal : MealsUtil.MEALS_LIST) {
-            meal.setId(counter.incrementAndGet());
-            mealsMap.put(counter.get(), meal);
+            create(meal);
         }
     }
 
@@ -34,8 +33,7 @@ public class InMemoryDaoMeals implements Dao {
 
     @Override
     public Meal update(Meal meal) {
-        mealsMap.put(meal.getId(), meal);
-        return meal;
+        return mealsMap.computeIfPresent(meal.getId(), (key, value) -> meal);
     }
 
     @Override
