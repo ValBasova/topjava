@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.dao.DaoMeal;
-import ru.javawebinar.topjava.dao.InMemoryDaoMeals;
+import ru.javawebinar.topjava.dao.MealDao;
+import ru.javawebinar.topjava.dao.InMemoryMealDao;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -21,12 +21,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
 
-    private DaoMeal dao;
+    private MealDao dao;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        dao = new InMemoryDaoMeals();
+        dao = new InMemoryMealDao();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, IOException {
@@ -44,22 +44,24 @@ public class MealServlet extends HttpServlet {
 
         if (id == null) {
             dao.create(meal);
+            log.info("Creating "+ meal);
         } else {
             dao.update(meal);
+            log.info("Updating " + meal);
         }
         response.sendRedirect("meals");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        log.debug("redirect to meals");
         String forward = "";
         String action = request.getParameter("action");
         String mealsJsp = "/meals.jsp";
         String addOrEditJsp = "/addOrEditMeal.jsp";
         Meal meal;
         if (action == null) {
-            List<MealTo> mealToList = MealsUtil.toMealTo(dao.getAll(), 2000);
+            log.info("Getting all");
+            List<MealTo> mealToList = MealsUtil.toMealTo(dao.getAll(), MealsUtil.CALORIES_PER_DAY);
             request.setAttribute("mealsList", mealToList);
             request.getRequestDispatcher(mealsJsp).forward(request, response);
             return;
@@ -67,6 +69,7 @@ public class MealServlet extends HttpServlet {
         switch (action.toLowerCase()) {
             case "delete":
                 dao.delete(Integer.parseInt(request.getParameter("id")));
+                log.info("Deleting meal with id " + request.getParameter("id"));
                 response.sendRedirect("meals");
                 return;
             case "update":

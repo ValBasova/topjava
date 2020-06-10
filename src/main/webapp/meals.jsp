@@ -1,6 +1,7 @@
 <%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <html lang="ru">
 <head>
@@ -20,8 +21,10 @@
     </tr>
     <c:forEach items="${mealsList}" var="meal">
         <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
-        <c:set var="color" value="${!meal.excess ? 'red': 'green'}"/>
+        <c:set var="color" value="${!meal.excess ? 'green': 'red'}"/>
         <tr style="color: ${color}">
+<%--            <jsp:useBean id="date" class="java.time.LocalDateTime"/>--%>
+<%--            <td><fmt:formatDate value="${meal.dateTime}" type="both" pattern="${TimeUtil.DATE_FORMATTER}"/></td>>--%>
             <td><%=TimeUtil.format(meal.getDateTime())%>
             </td>
             <td>${meal.description}</td>

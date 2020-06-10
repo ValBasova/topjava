@@ -10,7 +10,7 @@
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt>Date and Time:</dt>
-            <dd><input type="datetime-local" value="<%=meal.getDateTime()%>" name="dateTime" required></dd>
+            <dd><input type="datetime-local" value="${meal.dateTime}" name="dateTime" required></dd>
         </dl>
         <dl>
             <dt>Description:</dt>

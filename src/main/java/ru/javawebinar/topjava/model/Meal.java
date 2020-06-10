@@ -3,16 +3,18 @@ package ru.javawebinar.topjava.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class Meal {
+
+    private Integer id;
+
     private LocalDateTime dateTime;
 
     private String description;
 
     private int calories;
-
-    private Integer id;
 
     public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
         this.id = id;
@@ -26,7 +28,7 @@ public class Meal {
     }
 
     public Meal() {
-        this(LocalDateTime.now(), "", 0);
+        this(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 0);
     }
 
     public LocalDateTime getDateTime() {
@@ -80,5 +82,15 @@ public class Meal {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Meal{" +
+                "id=" + id +
+                ", dateTime=" + dateTime +
+                ", description='" + description + '\'' +
+                ", calories=" + calories +
+                '}';
     }
 }
