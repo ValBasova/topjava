@@ -23,6 +23,27 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <br><br>
+    <form method="post" action="meals">
+        <%--        <input type="hidden" name="id" value="${meal.id}">--%>
+        <dl>
+            <dt>DateStart:</dt>
+            <dd><input type="date" value="${""}" name="dateStart"></dd>
+        </dl>
+        <dl>
+            <dt>DateEnd:</dt>
+            <dd><input type="date" value="${""}" name="dateEnd"></dd>
+        </dl>
+        <dl>
+            <dt>TimeStart:</dt>
+            <dd><input type="time" value="${""}" name="timeStart"></dd>
+        </dl>
+        <dl>
+            <dt>TimeEnd:</dt>
+            <dd><input type="time" value="${""}" name="timeEnd"></dd>
+        </dl>
+        <button type="submit">Save</button>
+    </form>
+
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
         <tr>

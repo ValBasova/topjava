@@ -43,6 +43,11 @@ public class MealRestController {
         return new ArrayList<>(service.getAll(authUserId()));
     }
 
+    public List<Meal> getAllFilteredByDateTime(String dateStart, String dateEnd, String timeStart, String timeEnd) {
+        log.info("getAllfilteredByDateTime");
+        return new ArrayList<>(service.getAllfilteredByDateTime(authUserId(), dateStart, dateEnd, timeStart, timeEnd));
+    }
+
     public Meal get(int id) {
         log.info("get {}", id);
         return service.get(id, authUserId());
