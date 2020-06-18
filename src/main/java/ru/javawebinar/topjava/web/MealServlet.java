@@ -19,8 +19,8 @@ import java.util.Objects;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 public class MealServlet extends HttpServlet {
-    ConfigurableApplicationContext appCtx;
-    MealRestController mealRestController;
+    private ConfigurableApplicationContext appCtx;
+    private MealRestController mealRestController;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -35,10 +35,9 @@ public class MealServlet extends HttpServlet {
         String id = request.getParameter("id");
         if (id != null) {
             Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                    authUserId(),
                     LocalDateTime.parse(request.getParameter("dateTime")),
                     request.getParameter("description"),
-                    Integer.parseInt(request.getParameter("calories")));
+                    Integer.parseInt(request.getParameter("calories")), authUserId());
             mealRestController.create(meal);
         } else {
             String dateStart = request.getParameter("dateStart");
@@ -65,7 +64,7 @@ public class MealServlet extends HttpServlet {
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
-                        new Meal(authUserId(), LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
+                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000, authUserId()) :
                         mealRestController.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);

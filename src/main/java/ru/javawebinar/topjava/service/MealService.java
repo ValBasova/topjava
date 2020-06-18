@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
+import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
@@ -32,16 +33,16 @@ public class MealService {
         return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    public Collection<Meal> getAll(int userId) {
+    public List<Meal> getAll(int userId) {
         return repository.getAll(userId);
     }
 
-    public Collection<Meal> getAllfilteredByDateTime(int userId, String dateStart, String dateEnd, String timeStart, String timeEnd) {
+    public List<Meal> getAllfilteredByDateTime(int userId, String dateStart, String dateEnd, String timeStart, String timeEnd) {
 
         LocalDate ds = DateTimeUtil.parseToLocalDate(dateStart);
         LocalDate de = DateTimeUtil.parseToLocalDate(dateEnd);
-        LocalTime ts = DateTimeUtil.parseToLocalTime(timeStart);
-        LocalTime te = DateTimeUtil.parseToLocalTime(timeEnd);
+//        LocalTime ts = DateTimeUtil.parseToLocalTime(timeStart);
+//        LocalTime te = DateTimeUtil.parseToLocalTime(timeEnd);
 
         return repository.getAllfilteredByDate(userId, ds, de);
     }

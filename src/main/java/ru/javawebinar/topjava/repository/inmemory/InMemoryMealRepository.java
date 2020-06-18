@@ -57,12 +57,12 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getAll(int userId) {
+    public List<Meal> getAll(int userId) {
         return filterByPredicate(userId, meal -> true);
     }
 
     @Override
-    public Collection<Meal> getAllfilteredByDate(int userId, LocalDate startDate, LocalDate endDate) {
+    public List<Meal> getAllfilteredByDate(int userId, LocalDate startDate, LocalDate endDate) {
         return filterByPredicate(userId, meal -> DateTimeUtil.isBetweenInclusive(meal.getDate(), startDate, endDate));
     }
 
