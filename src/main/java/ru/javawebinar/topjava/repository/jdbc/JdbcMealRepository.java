@@ -12,6 +12,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Repository
@@ -74,6 +75,6 @@ public class JdbcMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDate, LocalDateTime endDate, int userId) {
         return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? AND date_time BETWEEN  ? AND ? ORDER BY " +
-                "date_time DESC ", ROW_MAPPER, userId, startDate, endDate);
+                "date_time DESC ", ROW_MAPPER, userId, startDate, endDate.minus(1, ChronoUnit.SECONDS));
     }
 }
